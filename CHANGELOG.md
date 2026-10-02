@@ -5,3 +5,4 @@
 * v1.2.2: Corrección definitiva del issuer JWT a Azure AD v2.0 (login.microsoftonline.com) y remoción del audience mal formado.
 * v1.2.3: Forzar IPv4 en la JVM (java.net.preferIPv4Stack) para evitar fallo de validación del issuer por IPv6 no ruteable dentro del contenedor.
 * v1.2.4: Fix de encoding UTF-8 en la conexión JDBC, por consistencia con ms-productos.
+* v1.3.0: Arquitectura de DTOs y capa de servicio; valida existencia y stock del producto contra ms-productos antes de agregarlo al carrito (reenviando el JWT); nuevos endpoints PUT/DELETE para actualizar cantidad y eliminar items; fix de datasource que apuntaba por error al host de ms-productos.
