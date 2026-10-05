@@ -11,5 +11,9 @@ import java.util.Optional;
 public interface ItemCarritoRepository extends JpaRepository<ItemCarrito, Long> {
     List<ItemCarrito> findByUsuarioId(String usuarioId);
 
+    // Evita duplicar filas cuando el usuario agrega el mismo producto dos veces
     Optional<ItemCarrito> findByUsuarioIdAndProductoId(String usuarioId, Long productoId);
+
+    // Vacía el carrito completo (lo usa ms-ordenes tras confirmar una compra)
+    void deleteByUsuarioId(String usuarioId);
 }

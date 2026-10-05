@@ -7,3 +7,4 @@
 * v1.2.4: Fix de encoding UTF-8 en la conexión JDBC, por consistencia con ms-productos.
 * v1.3.0: Arquitectura de DTOs y capa de servicio; valida existencia y stock del producto contra ms-productos antes de agregarlo al carrito (reenviando el JWT); nuevos endpoints PUT/DELETE para actualizar cantidad y eliminar items; fix de datasource que apuntaba por error al host de ms-productos.
 * v1.3.1: Apunta a ms-productos por su IP pública de producción en vez del hostname interno de Docker.
+* v1.4.0: Agrega endpoint para vaciar el carrito completo (lo usa ms-ordenes tras confirmar una compra).

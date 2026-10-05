@@ -29,6 +29,7 @@ public class CarritoService {
     }
 
     public ItemCarritoResponseDTO agregarAlCarrito(String usuarioId, ItemCarritoRequestDTO request, String bearerToken) {
+        // Antes no se validaba que el producto existiera ni que tuviera stock
         ProductoDTO producto = productoClient.obtenerProducto(request.productoId(), bearerToken);
 
         if (Boolean.FALSE.equals(producto.activo())) {
@@ -39,6 +40,7 @@ public class CarritoService {
                     "Stock insuficiente para \"" + producto.nombre() + "\". Disponible: " + producto.stock());
         }
 
+        // Si el usuario ya tiene este producto en el carrito, sumamos en vez de duplicar la fila
         ItemCarrito item = carritoRepository.findByUsuarioIdAndProductoId(usuarioId, request.productoId())
                 .map(existente -> {
                     int nuevaCantidad = existente.getCantidad() + request.cantidad();
@@ -79,11 +81,20 @@ public class CarritoService {
         carritoRepository.delete(item);
     }
 
+    // Usado por ms-ordenes justo después de confirmar la compra
+    public void vaciarCarrito(String usuarioId) {
+        carritoRepository.deleteByUsuarioId(usuarioId);
+    }
+
+    // Antes cualquier usuario autenticado podía modificar/borrar el item de OTRO usuario
+    // con solo adivinar/probar el id (el id no se validaba contra el dueño real).
     private ItemCarrito obtenerItemDelUsuario(String usuarioId, Long itemId) {
         ItemCarrito item = carritoRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item de carrito no encontrado: " + itemId));
 
         if (!item.getUsuarioId().equals(usuarioId)) {
+            // Se responde 404 y no 403 a propósito: no queremos confirmarle a un usuario
+            // que el id que probó existe y es de otra persona.
             throw new ResourceNotFoundException("Item de carrito no encontrado: " + itemId);
         }
         return item;

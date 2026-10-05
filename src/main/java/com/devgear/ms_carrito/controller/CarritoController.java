@@ -47,10 +47,19 @@ public class CarritoController {
         return ResponseEntity.noContent().build();
     }
 
+    // Vacía el carrito completo. Lo llama ms-ordenes justo después de crear la orden.
+    @DeleteMapping
+    public ResponseEntity<Void> vaciarCarrito(JwtAuthenticationToken auth) {
+        carritoService.vaciarCarrito(usuarioId(auth));
+        return ResponseEntity.noContent().build();
+    }
+
+    // Extrae el ID único del usuario desde el token de Azure (claim "oid")
     private String usuarioId(JwtAuthenticationToken auth) {
         return auth.getToken().getClaimAsString("oid");
     }
 
+    // Reenviamos el mismo token a ms-productos para consultarlo
     private String bearerToken(JwtAuthenticationToken auth) {
         return "Bearer " + auth.getToken().getTokenValue();
     }
