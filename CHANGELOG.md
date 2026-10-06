@@ -8,3 +8,4 @@
 * v1.3.0: Arquitectura de DTOs y capa de servicio; valida existencia y stock del producto contra ms-productos antes de agregarlo al carrito (reenviando el JWT); nuevos endpoints PUT/DELETE para actualizar cantidad y eliminar items; fix de datasource que apuntaba por error al host de ms-productos.
 * v1.3.1: Apunta a ms-productos por su IP pública de producción en vez del hostname interno de Docker.
 * v1.4.0: Agrega endpoint para vaciar el carrito completo (lo usa ms-ordenes tras confirmar una compra).
+* v1.4.1: Corrige TransactionRequiredException al vaciar el carrito — deleteByUsuarioId (método derivado) necesita @Transactional explícito, a diferencia de delete() heredado de JpaRepository que ya lo trae incorporado.

@@ -8,6 +8,7 @@ import com.devgear.ms_carrito.exception.ResourceNotFoundException;
 import com.devgear.ms_carrito.model.ItemCarrito;
 import com.devgear.ms_carrito.repository.ItemCarritoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -81,7 +82,12 @@ public class CarritoService {
         carritoRepository.delete(item);
     }
 
-    // Usado por ms-ordenes justo después de confirmar la compra
+    // Usado por ms-ordenes justo después de confirmar la compra.
+    // @Transactional es necesario acá: a diferencia de delete(item) (heredado
+    // de JpaRepository, ya transaccional por dentro), deleteByUsuarioId es un
+    // método derivado que SÍ necesita una transacción explícita para poder
+    // ejecutar el remove() de cada fila encontrada.
+    @Transactional
     public void vaciarCarrito(String usuarioId) {
         carritoRepository.deleteByUsuarioId(usuarioId);
     }
